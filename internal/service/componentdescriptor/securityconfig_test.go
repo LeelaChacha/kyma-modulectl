@@ -50,6 +50,35 @@ func Test_AppendProtecodeImagesLayers_ReturnCorrectResources(t *testing.T) {
 	}
 }
 
+func Test_AppendProtecodeImagesLayers_IgnoresLatestTag(t *testing.T) {
+	cd := &compdesc.ComponentDescriptor{}
+	cd.SetName("test.io/module/test")
+	cd.SetVersion("1.0.0")
+	cd.Provider = ocmv1.Provider{Name: "kyma"}
+
+	securityConfig := contentprovider.SecurityScanConfig{
+		Protecode: []string{
+			"europe-docker.pkg.dev/kyma-project/prod/template-operator:1.0.0",
+			"europe-docker.pkg.dev/kyma-project/prod/template-operator:latest",
+		},
+	}
+
+	err := componentdescriptor.AppendProtecodeImagesLayers(cd, securityConfig)
+	require.NoError(t, err)
+
+	require.Equal(t, 1, cd.Resources.Len())
+
+	require.Equal(t, "template-operator", cd.Resources[0].Name)
+	require.Equal(t, "1.0.0", cd.Resources[0].Version)
+
+	for _, res := range cd.Resources {
+		require.Equal(t, "ociArtifact", res.Type)
+		require.Equal(t, "scan.security.kyma-project.io/type", res.Labels[0].Name)
+		expectedLabel := json.RawMessage(`"third-party-image"`)
+		require.Equal(t, expectedLabel, res.Labels[0].Value)
+	}
+}
+
 func Test_AppendSecurityLabelsToSources_ReturnCorrectLabels(t *testing.T) {
 	sources := compdesc.Sources{
 		{
