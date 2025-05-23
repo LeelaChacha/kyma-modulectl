@@ -33,7 +33,11 @@ const (
 	refLabel                  = "git.kyma-project.io/ref"
 )
 
-var ErrSecurityConfigFileDoesNotExist = errors.New("security config file does not exist")
+var (
+	ignoredProtecodeTags = []string{"latest"}
+
+	ErrSecurityConfigFileDoesNotExist = errors.New("security config file does not exist")
+)
 
 type FileReader interface {
 	FileExists(path string) (bool, error)
@@ -142,6 +146,10 @@ func AppendBDBAImagesLayers(componentDescriptor *compdesc.ComponentDescriptor,
 			return fmt.Errorf("failed to get image name and tag: %w", err)
 		}
 
+		if shouldIgnoreProtecodeTag(imgTag) {
+			continue
+		}
+
 		imageTypeLabelKey := fmt.Sprintf("%s/%s", secScanBaseLabelKey, typeLabelKey)
 		imageTypeLabel, err := ocmv1.NewLabel(imageTypeLabelKey, thirdPartyImageLabelValue,
 			ocmv1.WithVersion(ocmVersion))
@@ -171,6 +179,15 @@ func AppendBDBAImagesLayers(componentDescriptor *compdesc.ComponentDescriptor,
 	}
 
 	return nil
+}
+
+func shouldIgnoreProtecodeTag(t string) bool {
+	for _, tag := range ignoredProtecodeTags {
+		if t == tag {
+			return true
+		}
+	}
+	return false
 }
 
 func appendLabelToAccessor(labeled compdesc.LabelsAccessor, key, value, baseKey string) error {
