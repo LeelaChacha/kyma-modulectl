@@ -59,7 +59,6 @@ metadata:
 spec:
   moduleName: {{.ModuleName}}
   version: {{.ModuleVersion}}
-  mandatory: {{.Mandatory}}
   requiresDowntime: {{.RequiresDowntime}}
   info:
     repository: {{.Repository}}
@@ -120,7 +119,6 @@ type moduleTemplateData struct {
 	Icons               contentprovider.Icons
 	Labels              map[string]string
 	Annotations         map[string]string
-	Mandatory           bool
 	Data                string
 	AssociatedResources []*metav1.GroupVersionKind
 	Resources           contentprovider.Resources
@@ -173,7 +171,6 @@ func (s *Service) GenerateModuleTemplate(
 		Icons:               moduleConfig.Icons,
 		Labels:              labels,
 		Annotations:         annotations,
-		Mandatory:           moduleConfig.Mandatory,
 		AssociatedResources: moduleConfig.AssociatedResources,
 		Manager:             moduleConfig.Manager,
 		RequiresDowntime:    moduleConfig.RequiresDowntime,
@@ -242,10 +239,6 @@ func generateLabels(config *contentprovider.ModuleConfig) map[string]string {
 
 	if labels == nil {
 		labels = make(map[string]string)
-	}
-
-	if config.Mandatory {
-		labels[shared.IsMandatoryModule] = shared.EnableLabelValue
 	}
 
 	if config.Beta {

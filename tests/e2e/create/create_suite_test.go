@@ -45,7 +45,6 @@ const (
 	withAnnotationsConfig         = validConfigs + "with-annotations.yaml"
 	withDefaultCrConfig           = validConfigs + "with-defaultcr.yaml"
 	withSecurityConfig            = validConfigs + "with-security.yaml"
-	withMandatoryConfig           = validConfigs + "with-mandatory.yaml"
 	withAssociatedResourcesConfig = validConfigs + "with-associated-resources.yaml"
 	withResources                 = validConfigs + "with-resources.yaml"
 	withResourcesOverwrite        = validConfigs + "with-resources-overwrite.yaml"

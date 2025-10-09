@@ -44,7 +44,6 @@ func Test_ParseModuleConfig_Returns_CorrectModuleConfig(t *testing.T) {
 	require.Equal(t, contentprovider.Icons{
 		"module-icon": exampleIcon,
 	}, result.Icons)
-	require.False(t, result.Mandatory)
 	require.False(t, result.RequiresDowntime)
 	require.Equal(t, "path/to/securityConfig", result.Security)
 	require.Equal(t, map[string]string{"label1": "value1"}, result.Labels)
@@ -588,7 +587,6 @@ var expectedReturnedModuleConfig = contentprovider.ModuleConfig{
 	Icons: contentprovider.Icons{
 		"module-icon": exampleIcon,
 	},
-	Mandatory:        false,
 	RequiresDowntime: false,
 	DefaultCR:        contentprovider.MustUrlOrLocalFile("https://example.com/path/to/defaultCR"),
 	Security:         "path/to/securityConfig",

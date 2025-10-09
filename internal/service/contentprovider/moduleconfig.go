@@ -87,7 +87,6 @@ type ModuleConfig struct {
 	Documentation       string                     `comment:"required, reference to the documentation, must be a URL"                                                                           yaml:"documentation"`
 	Icons               Icons                      `comment:"required, icons used for UI"                                                                                                       yaml:"icons,omitempty"`
 	DefaultCR           UrlOrLocalFile             `comment:"optional, reference to a YAML file containing the default CR for the module, must be a URL or a local file path"                   yaml:"defaultCR"` //nolint:tagliatelle // prefer defaultCR over defaultCr
-	Mandatory           bool                       `comment:"optional, default=false, indicates whether the module is mandatory to be installed on all clusters"                                yaml:"mandatory"`
 	Security            string                     `comment:"optional, reference to a YAML file containing the security scanners config, must be a local file path"                             yaml:"security"`
 	Labels              map[string]string          `comment:"optional, additional labels for the generated ModuleTemplate CR"                                                                   yaml:"labels"`
 	Annotations         map[string]string          `comment:"optional, additional annotations for the generated ModuleTemplate CR"                                                              yaml:"annotations"`

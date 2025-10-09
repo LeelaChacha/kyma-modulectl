@@ -124,7 +124,6 @@ func (*fileExistsStub) ReadFile(_ string) ([]byte, error) {
 		Name:             "module-name",
 		Version:          "0.0.1",
 		Manifest:         manifest,
-		Mandatory:        false,
 		RequiresDowntime: false,
 		DefaultCR:        defaultCR,
 		Security:         "path/to/securityConfig",

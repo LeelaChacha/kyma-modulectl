@@ -766,36 +766,6 @@ var _ = Describe("Test 'create' command", Ordered, func() {
 
 	It("Given 'modulectl create' command", func() {
 		var cmd createCmd
-		By("When invoked with valid module-config containing mandatory true and different version", func() {
-			cmd = createCmd{
-				moduleConfigFile:          withMandatoryConfig,
-				registry:                  ociRegistry,
-				insecure:                  true,
-				output:                    templateOutputPath,
-				moduleSourcesGitDirectory: templateOperatorPath,
-			}
-		})
-		By("Then the command should succeed", func() {
-			Expect(cmd.execute()).To(Succeed())
-
-			By("And module template file should be generated")
-			Expect(filesIn("/tmp/")).Should(ContainElement("template.yaml"))
-
-			By("Then module template should contain the expected content", func() {
-				template, err := readModuleTemplate(templateOutputPath)
-				Expect(err).ToNot(HaveOccurred())
-				descriptor := getDescriptor(template)
-				Expect(descriptor).ToNot(BeNil())
-
-				By("And module template should be marked as mandatory")
-				Expect(template.Spec.Mandatory).To(BeTrue())
-				Expect(template.Labels[shared.IsMandatoryModule]).To(Equal("true"))
-			})
-		})
-	})
-
-	It("Given 'modulectl create' command", func() {
-		var cmd createCmd
 		By("When invoked with valid module-config containing manager field and different version", func() {
 			cmd = createCmd{
 				moduleConfigFile:          withManagerConfig,
@@ -1504,12 +1474,6 @@ func validateMinimalModuleTemplate(template *v1beta2.ModuleTemplate, descriptor 
 	Expect(ok).To(BeTrue())
 	Expect(github.Type).To(Equal(githubAccessSpec.Type))
 	Expect(githubAccessSpec.RepoURL).To(Equal("https://github.com/kyma-project/template-operator"))
-
-	By("And module template should not marked as mandatory")
-	Expect(template.Spec.Mandatory).To(BeFalse())
-	val, ok := template.Labels[shared.IsMandatoryModule]
-	Expect(val).To(BeEmpty())
-	Expect(ok).To(BeFalse())
 
 	By("And spec.associatedResources should be empty")
 	Expect(template.Spec.AssociatedResources).To(BeEmpty())

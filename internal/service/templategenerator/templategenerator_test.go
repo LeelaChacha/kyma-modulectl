@@ -57,7 +57,6 @@ spec:
 				Version:     "1.0.0",
 				Labels:      map[string]string{"key": "value"},
 				Annotations: map[string]string{"annotation": "value"},
-				Mandatory:   true,
 				Manifest:    commonManifest,
 				Resources: contentprovider.Resources{
 					"someResource": "https://some.other/location/template-operator.yaml",
@@ -88,7 +87,6 @@ spec:
 				Version:     "1.0.0",
 				Labels:      map[string]string{"key": "value"},
 				Annotations: map[string]string{"annotation": "value"},
-				Mandatory:   true,
 				Manifest:    commonManifest,
 			},
 			assertions: func(t *testing.T, mockFS *mockFileSystem) {
@@ -120,7 +118,6 @@ spec:
 				Version:     "1.0.0",
 				Labels:      map[string]string{"key": "value"},
 				Annotations: map[string]string{"annotation": "value"},
-				Mandatory:   true,
 				AssociatedResources: []*metav1.GroupVersionKind{
 					{
 						Group:   "networking.istio.io",
@@ -146,7 +143,6 @@ spec:
 				Version:     "1.0.0",
 				Labels:      map[string]string{"key": "value"},
 				Annotations: map[string]string{"annotation": "value"},
-				Mandatory:   true,
 				Manager: &contentprovider.Manager{
 					Name:      "manager-name",
 					Namespace: "manager-ns",
@@ -176,7 +172,6 @@ spec:
 				Version:     "1.0.0",
 				Labels:      map[string]string{"key": "value"},
 				Annotations: map[string]string{"annotation": "value"},
-				Mandatory:   true,
 				Manager: &contentprovider.Manager{
 					Name: "manager-name",
 					GroupVersionKind: metav1.GroupVersionKind{
@@ -194,49 +189,6 @@ spec:
 				require.Contains(t, mockFS.writtenTemplate, "v1")
 				require.Contains(t, mockFS.writtenTemplate, "Deployment")
 				require.Equal(t, 1, strings.Count(mockFS.writtenTemplate, "namespace"))
-			},
-		},
-		{
-			name: "With Mandatory False",
-			data: defaultData,
-			moduleConfig: &contentprovider.ModuleConfig{
-				Name:        "example.com/component",
-				Version:     "1.0.0",
-				Labels:      map[string]string{"key": "value"},
-				Annotations: map[string]string{"annotation": "value"},
-				Mandatory:   false,
-				Manifest:    commonManifest,
-				Resources: contentprovider.Resources{
-					"someResource": "https://some.other/location/template-operator.yaml",
-				},
-			},
-			assertions: func(t *testing.T, mockFS *mockFileSystem) {
-				t.Helper()
-				assertCommonTemplateProperties(t, mockFS)
-				require.Contains(t, mockFS.writtenTemplate, "mandatory: false")
-				require.NotContains(t, mockFS.writtenTemplate, "\"operator.kyma-project.io/mandatory-module\"")
-			},
-		},
-		{
-			name: "With Mandatory True",
-			data: defaultData,
-			moduleConfig: &contentprovider.ModuleConfig{
-				Name:        "example.com/component",
-				Version:     "1.0.0",
-				Labels:      map[string]string{"key": "value"},
-				Annotations: map[string]string{"annotation": "value"},
-				Mandatory:   true,
-				Manifest:    commonManifest,
-				Resources: contentprovider.Resources{
-					"someResource": "https://some.other/location/template-operator.yaml",
-				},
-			},
-			assertions: func(t *testing.T, mockFS *mockFileSystem) {
-				t.Helper()
-				assertCommonTemplateProperties(t, mockFS)
-				require.Contains(t, mockFS.writtenTemplate, "mandatory: true")
-				require.Contains(t, mockFS.writtenTemplate,
-					"\"operator.kyma-project.io/mandatory-module\": \"true\"")
 			},
 		},
 		{
@@ -349,7 +301,6 @@ spec:
 				Version:     "1.0.0",
 				Labels:      map[string]string{"key": "value"},
 				Annotations: map[string]string{"annotation": "value"},
-				Mandatory:   true,
 				Manifest:    commonManifest,
 				Resources: contentprovider.Resources{
 					"someResource": "https://some.other/location/template-operator.yaml",

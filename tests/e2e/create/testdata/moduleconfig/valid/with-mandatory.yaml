@@ -6,4 +6,3 @@ documentation: https://github.com/kyma-project/template-operator/blob/main/READM
 icons:
   - name: module-icon
     link: https://github.com/kyma-project/template-operator/blob/main/docs/assets/logo.png
-mandatory: true
